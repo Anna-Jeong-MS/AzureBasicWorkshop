@@ -94,7 +94,7 @@ ssh -i <keyname>.pem azureuser@<vm-ip>
 1. 아래 명령어를 사용하여 깃허브에서 todoapp 리포지토리를 복제합니다.
 
 ```bash
-git clone https://github.com/Anna-Jeong-MS/AzureBasicWorkshop.git
+git clone https://github.com/Anna-Jeong-MS/TodoApp.git
 ```
 
 1. todoapp을 실행하기 위해 몇 가지 파이썬 종속성을 설치해야 합니다. 파이썬 종속성 설치하기 위해 파이썬 종속성을 설치하기 위한 도구인 pip를 설치합니다.
