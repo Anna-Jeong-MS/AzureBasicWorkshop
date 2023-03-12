@@ -9,3 +9,6 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 def redirect_index():
     return "static/index.html"
 
+@app.get("/hcheck", status_code=201)
+def health_check():
+    return ""
