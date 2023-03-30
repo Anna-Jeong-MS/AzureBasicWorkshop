@@ -6,6 +6,7 @@ Basic의 경우 약 한 시간, Advanced의 경우 약 두 시간이 소요됩�
 
 ## 컨텐츠
 [Basic](https://github.com/Anna-Jeong-MS/AzureBasicWorkshop/tree/main/basic)
+
 [Advanced](https://github.com/Anna-Jeong-MS/AzureBasicWorkshop/tree/main/advanced)
 
 ## 샘플 코드
