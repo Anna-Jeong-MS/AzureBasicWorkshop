@@ -1,6 +1,4 @@
-# Azure Basic Workshop
-
-# 웹 애플리케이션 배포하기
+# Advanced
 
 ![Untitled](images/Untitled.png)
 
@@ -112,31 +110,45 @@ pip --version
 9. 이제 todoapp을 실행하기 위한 종속성을 다운로드 받습니다.
 
 ```bash
-sudo pip install fastapi && sudo pip install "uvicorn[standard]"
+sudo pip install fastapi
+sudo pip install "uvicorn[standard]"
+sudo pip install aiofiles
+sudo pip install pyodbc
 ```
 
-10. 아래 명령어를 사용하여 애플리케이션을 실행합니다.
+10. 아래 명령어를 통해 SQL Server용 ODBC 드라이버 다운로드합니다.
 
 ```bash
-cd AzureBasicWorkshop/todoapp/ && sudo uvicorn main:app --host 0.0.0.0 --port 80 > /dev/null 2>&1 &
+sudo su
+curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+
+curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list > /etc/apt/sources.list.d/mssql-release.list
+
+sudo apt-get update
+sudo ACCEPT_EULA=Y apt-get install -y msodbcsql17
 ```
 
-11. 테스트를 위해 가상 머신에 80번 포트의 연결을 허용하는 인바운드 포트 규칙을 추가해 보도록 하겠습니다. 이 규칙은 부하 분산 장치를 만들고 나면 해당 부하 분산 장치를 통해서 들어오는 트래픽만 허용하도록 수정할 것 입니다.
-    
-    애저 포털에서 가상 머신 화면으로 이동 후, 생성한 TodoVM을 선택하고 왼쪽 네트워킹 메뉴를 클릭합니다.
-    
-12. 인바운드 포트 규칙에서 인바운드 포트 규칙 추가 버튼을 클릭하고 아래와 같이 설정하고 추가 버튼을 클릭합니다.
+11. 아래 명령어를 사용하여 애플리케이션을 실행합니다.
 
-  ![Untitled](images/Untitled%2011.png)
+```bash
+cd TodoApp
+sudo uvicorn main:app --host 0.0.0.0 --port 80 > app.log 2>&1 &
+```
 
 ### 배포 테스트
 
-1. TodoVM에서 개요 메뉴를 클릭합니다.
-2. 공용 IP 주소를 복사합니다.
+테스트를 위해 가상 머신에 80번 포트의 연결을 허용하는 인바운드 포트 규칙을 추가해 보도록 하겠습니다. 이 규칙은 부하 분산 장치를 만들고 나면 해당 부하 분산 장치를 통해서 들어오는 트래픽만 허용하도록 수정할 것 입니다.
+
+1. 애저 포털에서 가상 머신 화면으로 이동 후, 생성한 TodoVM을 선택하고 왼쪽 네트워킹 메뉴를 클릭합니다.
+2. 인바운드 포트 규칙에서 인바운드 포트 규칙 추가 버튼을 클릭하고 아래와 같이 설정하고 추가 버튼을 클릭합니다.
+
+  ![Untitled](images/Untitled%2011.png)
+
+3. 공용 IP 주소를 복사합니다.
 
   ![Untitled](images/Untitled%2012.png)
 
-3. 브라우저에서 새 탭을 열고 복사한 공용 IP 주소를 붙여넣습니다. 다음과 같은 화면이 뜨면 정상적으로 배포가 완료된 것입니다.
+4. 브라우저에서 새 탭을 열고 복사한 공용 IP 주소를 붙여넣습니다. 다음과 같은 화면이 뜨면 정상적으로 배포가 완료된 것입니다.
 
   ![Untitled](images/Untitled%2013.png)
 
@@ -159,7 +171,7 @@ cd AzureBasicWorkshop/todoapp/ && sudo uvicorn main:app --host 0.0.0.0 --port 80
 5. 프런트 엔드 IP 구성 추가 버튼을 클릭하고 아래와 같이 구성 후, 추가 버튼을 클릭합니다.
 
   ![Untitled](images/Untitled%2015.png)
-todoPublicIP
+
 - 이름 : todoPublic
 - IP 버전 : IPv4
 - IP 유형 : IP 주소
@@ -186,27 +198,24 @@ todoPublicIP
   ![Untitled](images/Untitled%2018.png)
 
 11. TodoRule이 정상적으로 추가된 것을 확인한 뒤, 검토 + 만들기 버튼을 클릭하고 만들기 버튼을 클릭하여 부하 분산 장치를 생성합니다.
-
-### 인바운드 포트 규칙 수정
-
-1. 애저 포털에서 가상 머신 화면으로 이동 후 TodoVM을 클릭합니다.
-2. 왼쪽 네트워킹 메뉴에서 이전에 생성한 80번 포트 규칙을 클릭합니다.
-3. 아래와 같이 규칙을 수정하고 저장 버튼을 클릭합니다.
+12. 리소스가 생성되면 왼쪽 프런트 엔드 IP 구성 메뉴를 클릭합니다.
 
   ![Untitled](images/Untitled%2019.png)
 
-4. 부하 분산 장치의 프런트 엔드 IP를 복사하여 새 탭에 붙여넣고 정상 동작을 확인합니다.
+13. 새 탭에서 해당 퍼블릭 아이피를 통해 정상적으로 웹 애플리케이션에 접속되는 것을 확인합니다.
+
+  ![Untitled](images/Untitled%2020.png)
 
 ## SQL 데이터베이스 만들기
 
 1. 왼쪽 상단 검색창에서 SQL 데이터베이스 입력하여 SQL 데이터베이스 화면으로 이동합니다.
 2. 만들기 버튼을 클릭합니다.
 
-  ![Untitled](images/Untitled%2020.png)
+  ![Untitled](images/Untitled%2021.png)
 
 3. 아래와 같이 구성합니다.
 
-  ![Untitled](images/Untitled%2021.png)
+  ![Untitled](images/Untitled%2022.png)
 
 - 구독 : 생성한 구독 선택
 - 리소스 그룹 : BasicWorkshopRG
@@ -215,9 +224,9 @@ todoPublicIP
 
 4. SQL Database 서버 만들기 화면이 나타나면 아래와 같이 구성하고 확인 버튼을 클릭합니다.
 
-  ![Untitled](images/Untitled%2022.png)
+  ![Untitled](images/Untitled%2023.png)
 
-- 서버 이름 : basic-workshop
+- 서버 이름 : basic-workshop-<name>
 - 위치 : (Asia Pacific) Korea Central
 - 인증 방법 : SQL 인증 사용
     - 서버 관리자 로그인 : db-admin
@@ -225,4 +234,28 @@ todoPublicIP
 
 5. 나머지 설정은 그대로 두고, 검토+만들기 버튼을 클릭합니다. 다음과 같은 화면이 뜨면 구성 내용을 확인하고 만들기 버튼을 클릭합니다.
 
-  ![Untitled](images/Untitled%2023.png)
+  ![Untitled](images/Untitled%2024.png)
+
+### SQL 데이터베이스 연동
+
+1. 리소스가 생성되면 왼쪽 메뉴에서 개요를 클릭하고 서버 이름을 복사합니다.
+
+  ![Untitled](images/Untitled%2025.png)
+
+2. 전 단계에서 띄워둔 웹 페이지(부하 분산 장치의 프런트 엔드 IP)로 접속하고 Connect to DB 탭을 클릭합니다.
+
+  ![Untitled](images/Untitled%2026.png)
+
+3. 아래와 같이 구성 후, Connect 버튼을 클릭합니다.
+
+  ![Untitled](images/Untitled%2027.png)
+
+- Server Name : SQL 데이터베이스 서버 이름
+- Server Admin : db-admin
+- Password : Todo123!@
+
+4. 정상적으로 연결이 완료되면, 다시 List 화면으로 돌아와서 기능들을 테스트합니다.
+
+  ![Untitled](images/Untitled%2028.png)
+
+수고하셨습니다. 감사합니다🙂
