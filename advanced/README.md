@@ -12,7 +12,10 @@
     - 웹 애플리케이션 배포
     - 배포 테스트
 - 부하 분산 장치 만들기
-- SQL 데이터베이스 만들기
+- SQL 데이터베이스 연동
+    - SQL 데이터베이스 서버 만들기
+    - 데이터베이스 엔드포인트 만들기
+    - SQL 데이터베이스 만들기
     - SQL 데이터베이스 연동
 
 ## 가상 네트워크 만들기
@@ -116,7 +119,7 @@ sudo pip install aiofiles
 sudo pip install pyodbc
 ```
 
-10. 아래 명령어를 통해 SQL Server용 ODBC 드라이버 다운로드합니다.
+10. 
 
 ```bash
 sudo su
@@ -124,6 +127,7 @@ curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
 
 curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list > /etc/apt/sources.list.d/mssql-release.list
 
+exit
 sudo apt-get update
 sudo ACCEPT_EULA=Y apt-get install -y msodbcsql17
 ```
@@ -206,56 +210,87 @@ sudo uvicorn main:app --host 0.0.0.0 --port 80 > app.log 2>&1 &
 
   ![Untitled](images/Untitled%2020.png)
 
-## SQL 데이터베이스 만들기
+## SQL 데이터베이스 연동
 
-1. 왼쪽 상단 검색창에서 SQL 데이터베이스 입력하여 SQL 데이터베이스 화면으로 이동합니다.
+### SQL 데이터베이스 서버 만들기
+
+1. 왼쪽 상단 검색창에서 SQL Server 입력하여 SQL Server 화면으로 이동합니다.
 2. 만들기 버튼을 클릭합니다.
+3. 아래와 같이 구성하고 검토 + 만들기 버튼을 클릭합니다.
 
   ![Untitled](images/Untitled%2021.png)
 
-3. 아래와 같이 구성합니다.
-
-  ![Untitled](images/Untitled%2022.png)
-
-- 구독 : 생성한 구독 선택
-- 리소스 그룹 : BasicWorkshopRG
-- 데이터베이스 이름 : TodoDB
-- 서버 : 새로 만들기 클릭
-
-4. SQL Database 서버 만들기 화면이 나타나면 아래와 같이 구성하고 확인 버튼을 클릭합니다.
-
-  ![Untitled](images/Untitled%2023.png)
-
 - 서버 이름 : basic-workshop-<name>
-- 위치 : (Asia Pacific) Korea Central
+- 위치 : (Asia Pacific) 한국 중부
 - 인증 방법 : SQL 인증 사용
     - 서버 관리자 로그인 : db-admin
     - 암호 : Todo123!@
 
-5. 나머지 설정은 그대로 두고, 검토+만들기 버튼을 클릭합니다. 다음과 같은 화면이 뜨면 구성 내용을 확인하고 만들기 버튼을 클릭합니다.
+4. 리소스가 생성되면 리소스로 이동 버튼을 클릭합니다.
+
+### 데이터베이스 프라이빗 엔드포인트 만들기
+
+1. 왼쪽 메뉴에서 네트워킹을 클릭하고 프라이빗 액세스 탭을 클릭합니다.
+2. 프라이빗 엔드포인트 만들기를 클릭합니다.
+
+  ![Untitled](images/Untitled%2022.png)
+
+3. 아래와 같이 구성 후, 다음: 리소스 > 버튼을 클릭합니다.
+
+  ![Untitled](images/Untitled%2023.png)
+
+- 구독 : 생성한 구독 선택
+- 리소스 그룹 : BasicWorkshopRG
+- 인스턴스 정보
+    - 이름 : DBPrivateEP
+    - 네트워크 인터페이스 이름 : DBPrivateEP-nic (자동생성)
+    - 지역 : 한국 중부
+
+4. 대상 하위 리소스가 자동으로 sqlServer로 선택되면 다음: 가상 네트워크 > 버튼을 클릭합니다.
+5. 아래와 같이 설정한 뒤 나머지 설정은 그대로 두고 프라이빗 엔드포인트를 생성합니다.
 
   ![Untitled](images/Untitled%2024.png)
 
-### SQL 데이터베이스 연동
+- 가상 네트워크 : BasicVNet(basicworkshoprg)
+- 서브넷 : default
 
-1. 리소스가 생성되면 왼쪽 메뉴에서 개요를 클릭하고 서버 이름을 복사합니다.
+### SQL 데이터베이스 만들기
+
+1. 왼쪽 상단 검색창에서 SQL 데이터베이스 입력하여 SQL 데이터베이스 화면으로 이동합니다.
+2. 만들기 버튼을 클릭합니다.
 
   ![Untitled](images/Untitled%2025.png)
 
-2. 전 단계에서 띄워둔 웹 페이지(부하 분산 장치의 프런트 엔드 IP)로 접속하고 Connect to DB 탭을 클릭합니다.
+3. 아래와 같이 구성합니다.
+- 구독 : 생성한 구독 선택
+- 리소스 그룹 : BasicWorkshopRG
+- 데이터베이스 이름 : basic-workshop
+- 서버 : basic-workshop
+
+4. 나머지 설정은 그대로 두고, 검토+만들기 버튼을 클릭합니다. 다음과 같은 화면이 뜨면 구성 내용을 확인하고 만들기 버튼을 클릭합니다.
 
   ![Untitled](images/Untitled%2026.png)
 
-3. 아래와 같이 구성 후, Connect 버튼을 클릭합니다.
+### SQL 데이터베이스 연동
+
+5. 리소스가 생성되면 왼쪽 메뉴에서 개요를 클릭하고 서버 이름을 복사합니다.
 
   ![Untitled](images/Untitled%2027.png)
+
+6. 전 단계에서 띄워둔 웹 페이지(부하 분산 장치의 프런트 엔드 IP)로 접속하고 Connect to DB 탭을 클릭합니다.
+
+  ![Untitled](images/Untitled%2028.png)
+
+7. 아래와 같이 구성 후, Connect 버튼을 클릭합니다.
+
+  ![Untitled](images/Untitled%2029.png)
 
 - Server Name : SQL 데이터베이스 서버 이름
 - Server Admin : db-admin
 - Password : Todo123!@
 
-4. 정상적으로 연결이 완료되면, 다시 List 화면으로 돌아와서 기능들을 테스트합니다.
+8. 정상적으로 연결이 완료되면, 다시 List 화면으로 돌아와서 기능들을 테스트합니다.
 
-  ![Untitled](images/Untitled%2028.png)
+  ![Untitled](images/Untitled%2030.png)
 
 수고하셨습니다. 감사합니다🙂
