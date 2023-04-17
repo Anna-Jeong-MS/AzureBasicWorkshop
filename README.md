@@ -15,9 +15,3 @@ Azure Basic Workshop은 애저 인프라 코어 서비스들을 직접 Hands on 
   ![Untitled](advanced/images/Untitled.png)
 
   가상 머신에 웹 애플리케이션을 배포하고 웹 애플리케이션의 데이터를 관리하기 위한 SQL 데이터베이스를 구성합니다. 부하 분산 장치의 프런트 엔드 IP를 웹 애플리케이션을 진입점으로 사용하고 가상 머신을 백 엔드 풀로 사용합니다. 이렇게 구성하면 웹 애플리케이션을 논리적으로 격리할 수 있으며, 추후 애플리케이션의 확장을 고려한 아키텍처를 설계할 수 있습니다.
-
-## 샘플 코드
-
-```bash
-git clone https://github.com/Anna-Jeong-MS/TodoApp
-```
