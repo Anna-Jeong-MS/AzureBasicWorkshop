@@ -6,19 +6,19 @@
 
 ### 실습 내용
 
-- 가상 네트워크 만들기
-- 부하 분산 장치 만들기
-- NAT 게이트웨이 만들기
-- 웹 애플리케이션 배포
-    - 가상 머신 만들기
-    - 베스천 설정
-    - 웹 애플리케이션 배포
-    - 배포 테스트
-- SQL 데이터베이스 연동
-    - SQL 데이터베이스 서버 만들기
-    - SQL 데이터베이스 만들기
-    - 데이터베이스 엔드포인트 만들기
-    - SQL 데이터베이스 연동
+- [가상 네트워크 만들기](#가상-네트워크-만들기)
+- [부하 분산 장치 만들기](#부하-분산-장치-만들기)
+- [NAT 게이트웨이 만들기](#nat-게이트웨이-만들기)
+- [웹 애플리케이션 배포](#웹-애플리케이션-배포)
+    - [가상 머신 만들기](#가상-머신-만들기)
+    - [베스천 배포하기](#베스천-배포하기)
+    - [웹 애플리케이션 배포](#웹-애플리케이션-배포)
+    - [배포 테스트](#배포-테스트)
+- [SQL 데이터베이스 연동](#sql-데이터베이스-연동)
+    - [SQL 데이터베이스 서버 만들기](#sql-데이터베이스-서버-만들기)
+    - [SQL 데이터베이스 만들기](#sql-데이터베이스-만들기)
+    - [데이터베이스 프라이빗 엔드포인트 만들기](#데이터베이스-프라이빗-엔드포인트-만들기)
+    - [SQL 데이터베이스 연동하기](#sql-데이터베이스-연동하기)
 
 ## 가상 네트워크 만들기
 
@@ -192,10 +192,8 @@ sudo apt update && sudo apt install python3-pip
 4. 이제 **TodoApp**을 실행하기 위한 종속성을 다운로드 받습니다.
 
 ```bash
-sudo pip install fastapi
-sudo pip install "uvicorn[standard]"
-sudo pip install aiofiles
-sudo pip install pyodbc
+cd TodoApp
+sudo pip install -r requirements.txt
 ```
 
 5. SQL 데이터베이스 연결을 위해 ODBC 드라이버를 다운로드 합니다.
@@ -214,7 +212,6 @@ sudo ACCEPT_EULA=Y apt-get install -y msodbcsql17
 6. 아래 명령어를 사용하여 애플리케이션을 실행합니다.
 
 ```bash
-cd TodoApp
 sudo uvicorn main:app --host 0.0.0.0 --port 80 > app.log 2>&1 &
 ```
 
@@ -293,7 +290,7 @@ sudo uvicorn main:app --host 0.0.0.0 --port 80 > app.log 2>&1 &
 - 가상 네트워크 : BasicVNet(basicworkshoprg)
 - 서브넷 : default
 
-### SQL 데이터베이스 연동
+### SQL 데이터베이스 연동하기
 
 1. 리소스가 생성되면 왼쪽 메뉴에서 개요를 클릭하고 서버 이름을 복사합니다.
 
