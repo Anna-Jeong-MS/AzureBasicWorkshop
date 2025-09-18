@@ -23,6 +23,18 @@ Azure Basic Workshop은 Azure 인프라의 핵심 서비스를 직접 실습해�
 
 ---
 
+## 추가 실습: VMSS 구성
+
+워크숍 기본 실습을 마친 후 다음 항목들을 통해 실습을 확장해 볼 수 있습니다:
+
+- **Load Balancer** 설정:  
+  - 프론트엔드 IP 주소(front‑end IP)를 웹 애플리케이션 진입점으로 설정  
+  - 가상 머신들을 백엔드 풀(backend pool)로 구성하여 트래픽 분산  
+- 논리적 격리(Logical Isolation) 및 보안 그룹 구성: 애플리케이션 계층과 데이터 계층 간의 접근 통제  
+- 확장성(Scalability) 고려: VM을 백엔드 풀로 구성함으로써 추가 VM 추가/제거 용이한 구조 설계
+
+---
+
 ## 피드백 & 기여
 
 - 개선 아이디어, 오류 제보는 [Issues](https://github.com/Anna-Jeong-MS/AzureBasicWorkshop/issues) 탭을 활용해 주세요.
